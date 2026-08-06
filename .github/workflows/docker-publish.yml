@@ -3,6 +3,17 @@ name: Build and Push Docker Image to DockerHub
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      docker_tag:
+        description: 'Docker tag to publish (for example 1.2.3 or latest)'
+        required: false
+        default: 'latest'
+      include_latest:
+        description: 'Also publish as latest'
+        required: false
+        type: boolean
+        default: true
 
 env:
   DOCKER_IMAGE: francislaboratories/dumbbin
@@ -26,14 +37,31 @@ jobs:
 
       - name: Set Docker tags
         id: docker_meta
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || '' }}
+          MANUAL_TAG: ${{ github.event.inputs.docker_tag || '' }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          TAGS="${{ env.DOCKER_IMAGE }}:latest ${{ env.DOCKER_IMAGE }}:${{ github.event.release.tag_name }}"
-          echo "DOCKER_TAGS=$TAGS" >> $GITHUB_ENV
+          if [ "${{ github.event_name }}" = "release" ]; then
+            TAG_VALUE="$RELEASE_TAG"
+          elif [ -n "$MANUAL_TAG" ]; then
+            TAG_VALUE="$MANUAL_TAG"
+          else
+            TAG_VALUE="$REF_NAME"
+          fi
+
+          echo "IMAGE_TAG=$TAG_VALUE" >> "$GITHUB_OUTPUT"
 
       - name: Build and Push Multi-Platform Image
+        env:
+          IMAGE_TAG: ${{ steps.docker_meta.outputs.IMAGE_TAG }}
+          INCLUDE_LATEST: ${{ github.event.inputs.include_latest || 'true' }}
         run: |
           docker buildx create --use
-          docker buildx build --platform ${{ env.PLATFORMS }} \
-            --tag ${{ env.DOCKER_IMAGE }}:latest \
-            --tag ${{ env.DOCKER_IMAGE }}:${{ github.event.release.tag_name }} \
-            --push .
+          BUILD_ARGS=(--platform ${{ env.PLATFORMS }} --tag ${{ env.DOCKER_IMAGE }}:${IMAGE_TAG} --push .)
+
+          if [ "${INCLUDE_LATEST}" = "true" ]; then
+            BUILD_ARGS=(--platform ${{ env.PLATFORMS }} --tag ${{ env.DOCKER_IMAGE }}:latest --tag ${{ env.DOCKER_IMAGE }}:${IMAGE_TAG} --push .)
+          fi
+
+          docker buildx build "${BUILD_ARGS[@]}"
