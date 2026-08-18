@@ -39,6 +39,9 @@ app.set('trust proxy', 1);
 // Cors Setup
 const corsOptions = getCorsOptions();
 
+// Disable x-powered-by header to prevent Express version disclosure
+app.disable('x-powered-by');
+
 // Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
