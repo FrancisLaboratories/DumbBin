@@ -1,6 +1,6 @@
-const fs = require('fs');
+const fs = require('node:fs');
 const sharp = require('sharp');
-const path = require('path');
+const path = require('node:path');
 const ASSETS_DIR = path.join(__dirname, "..", "public", "assets");
 
 // Sizes for different use cases

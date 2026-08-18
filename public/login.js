@@ -10,7 +10,7 @@ let pinInputs = [];
 
 // Theme Management
 function updateThemeIcons() {
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const isDark = document.documentElement.dataset.theme === 'dark';
     moonIcon.style.display = isDark ? 'none' : 'block';
     sunIcon.style.display = isDark ? 'block' : 'none';
 }
@@ -19,9 +19,9 @@ function updateThemeIcons() {
 updateThemeIcons();
 
 themeToggle.addEventListener('click', () => {
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const isDark = document.documentElement.dataset.theme === 'dark';
     const newTheme = isDark ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
+    document.documentElement.dataset.theme = newTheme;
     localStorage.setItem('theme', newTheme);
     updateThemeIcons();
 });
@@ -115,7 +115,7 @@ function setupPinInputListeners() {
         });
 
         input.addEventListener('keypress', (e) => {
-            if (!/[0-9]/.test(e.key)) {
+            if (!/\d/.test(e.key)) {
                 e.preventDefault();
             }
         });

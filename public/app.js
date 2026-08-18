@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const existingCustomSelect = selectorContainer.querySelector('.custom-select');
         if (existingCustomSelect) {
             const wasVisible = existingCustomSelect.style.display === 'block';
-            selectorContainer.removeChild(existingCustomSelect);
+            existingCustomSelect.remove();
             if (wasVisible) {
                 customSelect.style.display = 'block';
             }
@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Theme Management
     function updateThemeIcons() {
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const isDark = document.documentElement.dataset.theme === 'dark';
         moonIcon.style.display = isDark ? 'none' : 'block';
         sunIcon.style.display = isDark ? 'block' : 'none';
     }
@@ -272,9 +272,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateThemeIcons();
 
     themeToggle.addEventListener('click', () => {
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const isDark = document.documentElement.dataset.theme === 'dark';
         const newTheme = isDark ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', newTheme);
+        document.documentElement.dataset.theme = newTheme;
         localStorage.setItem('theme', newTheme);
         updateThemeIcons();
     });
@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const li = document.createElement('li');
         li.className = 'item-item';
         li.draggable = true;
-        li.setAttribute('data-item-id', item.id || item.text); // Use id if available
+        li.dataset.itemId = item.id || item.text; // Use id if available
 
         // Ensure item.shared property exists (default: false)
         if (typeof item.shared !== 'boolean') item.shared = false;
@@ -441,7 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dragImage.style.top = '-1000px';
             document.body.appendChild(dragImage);
             e.dataTransfer.setDragImage(dragImage, 0, 0);
-            setTimeout(() => document.body.removeChild(dragImage), 0);
+            setTimeout(() => dragImage.remove(), 0);
         });
         li.addEventListener('dragend', () => {
             li.classList.remove('dragging');
@@ -464,7 +464,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     // Update the items array to match the new order
                     const newOrder = [...document.querySelectorAll('.item-item')].map(item => {
-                        return items[currentList].find(t => t.text === item.getAttribute('data-item-id'));
+                        return items[currentList].find(t => t.text === item.dataset.itemId);
                     });
                     items[currentList] = newOrder;
                     saveItems();

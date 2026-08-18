@@ -1,5 +1,5 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const PUBLIC_DIR = path.join(__dirname, "..", "public");
 const ASSETS_DIR = path.join(PUBLIC_DIR, "assets");
 
@@ -9,7 +9,7 @@ function getFiles(dir, basePath = "/") {
 
   files.forEach((file) => {
     const filePath = path.join(dir, file);
-    const fileUrl = path.join(basePath, file).replace(/\\/g, "/");
+    const fileUrl = path.join(basePath, file).replaceAll('\\', "/");
 
     if (fs.statSync(filePath).isDirectory()) {
       fileList = fileList.concat(getFiles(filePath, fileUrl));

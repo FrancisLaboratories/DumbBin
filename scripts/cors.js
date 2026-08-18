@@ -24,19 +24,17 @@ function setupOrigins() {
 function normalizeOrigin(origin) {
   if (origin) {
       try {
-          console.log("Validating Origin:", origin);
           const normalizedOrigin = new URL(origin).origin;
-          console.log("Normalized Url:", normalizedOrigin);
           return normalizedOrigin;
       } catch (error) {
-          console.error("Error parsing referer URL:", error);
+          console.error("Error parsing referer URL.");
           throw new Error("Error parsing referer URL:", error);
       }
   }
 }
 
 function validateOrigin(origin) {
-  if (NODE_ENV === 'development' || allowedOrigins === '*') return true;
+  if (NODE_ENV === 'development' || allowedOrigins == '*') return true;
 
   try {
       if (origin) origin = normalizeOrigin(origin);
@@ -47,12 +45,12 @@ function validateOrigin(origin) {
 
       if (allowedOrigins.includes(origin)) return true; 
       else {
-          console.warn("Blocked request from origin:", { origin });
+          console.warn("Blocked request from origin.");
           return false;
       }
   }
   catch (error) {
-      console.error(error);
+      console.error("Origin validation failed.");
   }
 }
 
@@ -63,7 +61,7 @@ function originValidationMiddleware(req, res, next) {
   if (isOriginValid) {
       next();
   } else {
-      console.warn("Blocked request from origin:", { origin });
+      console.warn("Blocked request from origin.");
       res.status(403).json({ error: 'Forbidden' });
   }
 }

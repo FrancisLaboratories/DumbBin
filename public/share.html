@@ -10,7 +10,7 @@
         // Prevent theme flicker by setting theme immediately
         (function() {
             const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.dataset.theme = theme;
         })();
     </script>
 </head>
@@ -48,15 +48,15 @@
         const moonIcon = themeToggle.querySelector('.moon');
         const sunIcon = themeToggle.querySelector('.sun');
         function updateThemeIcons() {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const isDark = document.documentElement.dataset.theme === 'dark';
             moonIcon.style.display = isDark ? 'none' : 'block';
             sunIcon.style.display = isDark ? 'block' : 'none';
         }
         updateThemeIcons();
         themeToggle.addEventListener('click', () => {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const isDark = document.documentElement.dataset.theme === 'dark';
             const newTheme = isDark ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
+            document.documentElement.dataset.theme = newTheme;
             localStorage.setItem('theme', newTheme);
             updateThemeIcons();
         });
