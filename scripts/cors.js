@@ -34,7 +34,7 @@ function normalizeOrigin(origin) {
 }
 
 function validateOrigin(origin) {
-  if (NODE_ENV === 'development' || allowedOrigins === '*') return true;
+  if (NODE_ENV === 'development' || allowedOrigins == '*') return true;
 
   try {
       if (origin) origin = normalizeOrigin(origin);

@@ -1,9 +1,9 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs').promises;
-const path = require('path');
-const crypto = require('crypto');
+const fs = require('node:fs').promises;
+const path = require('node:path');
+const crypto = require('node:crypto');
 const cookieParser = require('cookie-parser');
 const app = express();
 const { getCorsOptions, originValidationMiddleware } = require('./scripts/cors');
