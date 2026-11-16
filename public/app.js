@@ -1,7 +1,7 @@
 
 import { ToastManager } from './managers/toast.js';
 // Easily change the version number here
-const APP_VERSION = '09302026';
+const APP_VERSION = '11162026';
 
 
 document.addEventListener('DOMContentLoaded', () => {
